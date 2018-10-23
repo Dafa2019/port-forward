@@ -10,6 +10,13 @@ public class ForwardServerOutboundHandler extends ChannelOutboundHandlerAdapter 
 
     private static Log logger = LogFactory.getLog(ForwardServerOutboundHandler.class);
 
+
+    private Router router;
+
+    ForwardServerOutboundHandler(Router router) {
+        this.router = router;
+    }
+
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
         byte[] bytes = (byte[])msg;

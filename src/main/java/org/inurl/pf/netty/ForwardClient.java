@@ -22,15 +22,15 @@ class ForwardClient {
     void init() {
 
         Bootstrap b = new Bootstrap();
-        b.group(NettyGroup.clientGroup);//NioEventLoopGroup
+        b.group(NettyGroup.clientGroup);
         b.channel(NioSocketChannel.class);
         b.option(ChannelOption.SO_KEEPALIVE, true);
         b.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) {
                 ch.pipeline()
-                .addLast(new ForwardClientInboundHandler(remoteAddress))
-                .addLast(new ForwardClientOutboundHandler())
+                .addLast(new ForwardClientInboundHandler(router, remoteAddress))
+                .addLast(new ForwardClientOutboundHandler(router))
                 ;
             }
         });

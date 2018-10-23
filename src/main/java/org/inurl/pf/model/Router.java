@@ -14,7 +14,7 @@ public class Router {
     /**
      * 本地地址
      */
-    private String host;
+    private String host = "0.0.0.0";
 
     /**
      * 目标端口
@@ -26,17 +26,8 @@ public class Router {
      */
     private String targetHost;
 
-    public Router(int port, String targetHost) {
-        this.port = port;
-        this.host = "0.0.0.0";
-        this.targetHost = targetHost;
-    }
+    public Router() {
 
-    public Router(int port, String host, String targetHost) {
-        this.port = port;
-        this.targetPort = port;
-        this.host = host;
-        this.targetHost = targetHost;
     }
 
     public Router(int port, String host, int targetPort, String targetHost) {
@@ -93,6 +84,11 @@ public class Router {
 
     @Override
     public String toString() {
-        return host + ":" + port + " -> " + targetHost + ":" + targetPort;
+        return host + ":" + port + "->" + targetHost + ":" + targetPort;
     }
+
+    public String getNo() {
+        return toString();
+    }
+
 }

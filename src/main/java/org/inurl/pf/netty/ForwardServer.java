@@ -17,7 +17,7 @@ public class ForwardServer extends Thread {
 
     private Router router;
 
-    ForwardServer(Router router) {
+    public ForwardServer(Router router) {
         this.router = router;
     }
 
@@ -34,7 +34,7 @@ public class ForwardServer extends Thread {
             public void initChannel(SocketChannel ch) {
                 ch.pipeline()
                 .addLast(new ForwardServerInboundHandler(router))
-                .addLast(new ForwardServerOutboundHandler())
+                .addLast(new ForwardServerOutboundHandler(router))
                 ;
             }
         })
@@ -42,15 +42,16 @@ public class ForwardServer extends Thread {
         .childOption(ChannelOption.TCP_NODELAY, true)
         ;
 
+        ChannelFuture f = null;
         try {
-            logger.debug("start forward : " + router);
-            ChannelFuture f = b.bind(router.getPort()).sync();
+            logger.info("启动端口转发 : " + router);
+            f = b.bind(router.getPort()).sync();
             f.channel().closeFuture().sync();
         } catch (InterruptedException ignored) {
             // thread exit
-        } finally {
-            logger.debug("stop forward : " + router);
         }
-
+        if (f != null)
+            f.channel().close();
+        logger.info("停止端口转发 : " + router);
     }
 }

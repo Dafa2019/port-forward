@@ -6,7 +6,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.inurl.pf.model.FlowAnalysis;
 import org.inurl.pf.model.Router;
+import org.inurl.pf.support.FlowAnalysisUtil;
 
 public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
 
@@ -21,12 +23,14 @@ public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf buf = (ByteBuf) msg;
-        byte[] bytes = new byte[buf.readableBytes()];
+        int len = buf.readableBytes();
+        FlowAnalysisUtil.addSendFlow(router.getNo(), len);
+        byte[] bytes = new byte[len];
         buf.readBytes(bytes);
         String ra = ctx.channel().remoteAddress().toString();
         Lock.Connection.wait(ra);
         Channel cc = ChannelPool.getClientChannel(ctx.channel().remoteAddress().toString());
-        cc.write(bytes);
+        cc.writeAndFlush(bytes);
     }
 
     @Override
@@ -38,11 +42,12 @@ public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
      * 断开触发
      */
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        super.channelInactive(ctx);
-        logger.info("客户端断开 : " + ctx.channel().remoteAddress());
+    public void channelInactive(ChannelHandlerContext ctx) {
+        logger.info("断开连接 : " + ctx.channel().remoteAddress());
+        FlowAnalysisUtil.addConnectFlow(router.getNo(), -1);
         String ra = ctx.channel().remoteAddress().toString();
         ChannelPool.releaseChannel(ra);
+        ctx.close();
     }
 
     /**
@@ -50,16 +55,17 @@ public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        logger.info("传入连接 : " + ctx.channel().remoteAddress());
+        FlowAnalysisUtil.addConnectFlow(router.getNo(), 1);
         String ra = ctx.channel().remoteAddress().toString();
         Lock.Connection.init(ra);
-        logger.info("客户端连接 : " + ra);
         ChannelPool.setServerChannel(ra, ctx.channel());
         new ForwardClient(router, ra).init();
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        logger.debug("异常断开 : " + cause.getMessage());
         ctx.close();
     }
 
