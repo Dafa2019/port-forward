@@ -1,0 +1,6 @@
+server:
+  port: 56666
+
+logging:
+  level:
+    root: info
