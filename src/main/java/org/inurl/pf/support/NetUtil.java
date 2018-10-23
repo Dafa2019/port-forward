@@ -11,7 +11,7 @@ public class NetUtil {
      * @param port 端口
      * @return 是否可用
      */
-    public static boolean protCheck(int port) {
+    public static boolean portCheck(int port) {
         ServerSocket socket;
         try {
             socket = new ServerSocket(port);

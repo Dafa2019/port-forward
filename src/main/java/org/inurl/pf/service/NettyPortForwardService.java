@@ -17,7 +17,7 @@ public class NettyPortForwardService implements PortForwardService {
 
     @Override
     public synchronized void addRouteMapping(Router router) {
-        if (NetUtil.protCheck(router.getPort())) {
+        if (NetUtil.portCheck(router.getPort())) {
             throw new RouteException("该端口不可用");
         }
         final int idx = routers.size();
