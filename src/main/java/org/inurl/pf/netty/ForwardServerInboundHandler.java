@@ -38,25 +38,18 @@ public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
         ChannelPool.flushClient(ctx.channel().remoteAddress().toString());
     }
 
-    /**
-     * 断开触发
-     */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        logger.info("断开连接 : " + ctx.channel().remoteAddress());
         FlowAnalysisUtil.addConnectFlow(router.getNo(), -1);
         String ra = ctx.channel().remoteAddress().toString();
         ChannelPool.releaseChannel(ra);
         ctx.close();
     }
 
-    /**
-     * 传入触发
-     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        logger.info("传入连接 : " + ctx.channel().remoteAddress());
         FlowAnalysisUtil.addConnectFlow(router.getNo(), 1);
+        FlowAnalysisUtil.addTotalConnectFlow(router.getNo(), 1);
         String ra = ctx.channel().remoteAddress().toString();
         Lock.Connection.init(ra);
         ChannelPool.setServerChannel(ra, ctx.channel());

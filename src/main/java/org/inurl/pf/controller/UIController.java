@@ -9,7 +9,7 @@ public class UIController {
 
     @RequestMapping
     public String index() {
-        return "";
+        return "index";
     }
 
 }

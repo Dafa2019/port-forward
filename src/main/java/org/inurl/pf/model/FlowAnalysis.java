@@ -35,9 +35,11 @@ public class FlowAnalysis {
     }
 
     public void addConnect(long amount) {
-        if (amount > 0)
-            totalConnect += amount;
         connect += amount;
+    }
+
+    public void addTotalConnect(long amount) {
+        totalConnect += amount;
     }
 
     public long getReceive() {

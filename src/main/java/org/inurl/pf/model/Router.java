@@ -26,9 +26,12 @@ public class Router {
      */
     private String targetHost;
 
+    private FlowAnalysis flow;
+
     public Router() {
 
     }
+    
 
     public Router(int port, String host, int targetPort, String targetHost) {
         this.port = port;
@@ -69,6 +72,13 @@ public class Router {
         this.targetHost = targetHost;
     }
 
+    public FlowAnalysis getFlow() {
+        return flow;
+    }
+
+    public void setFlow(FlowAnalysis flow) {
+        this.flow = flow;
+    }
 
     @Override
     public int hashCode() {

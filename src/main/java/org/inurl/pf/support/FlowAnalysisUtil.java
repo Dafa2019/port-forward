@@ -13,31 +13,40 @@ public class FlowAnalysisUtil {
         return getOrNew(no);
     }
 
+    public static void clear(String no) {
+        flowMap.remove(no);
+    }
+
     public static void addReviveFlow(String no, long amount) {
-        String name = "rf." + no;
-        LockUtil.lock(name);
+        LockUtil.lock(no);
         FlowAnalysis flow = getOrNew(no);
         flow.addReceive(amount);
         flowMap.put(no, flow);
-        LockUtil.release(name);
+        LockUtil.release(no);
     }
 
     public static void addSendFlow(String no, long amount) {
-        String name = "sf." + no;
-        LockUtil.lock(name);
+        LockUtil.lock(no);
         FlowAnalysis flow = getOrNew(no);
         flow.addSend(amount);
         flowMap.put(no, flow);
-        LockUtil.release(name);
+        LockUtil.release(no);
     }
 
     public static void addConnectFlow(String no, long amount) {
-        String name = "cf." + no;
-        LockUtil.lock(name);
+        LockUtil.lock(no);
         FlowAnalysis flow = getOrNew(no);
         flow.addConnect(amount);
         flowMap.put(no, flow);
-        LockUtil.release(name);
+        LockUtil.release(no);
+    }
+
+    public static void addTotalConnectFlow(String no, long amount) {
+        LockUtil.lock(no);
+        FlowAnalysis flow = getOrNew(no);
+        flow.addTotalConnect(amount);
+        flowMap.put(no, flow);
+        LockUtil.release(no);
     }
 
     private static FlowAnalysis getOrNew(String no) {
@@ -53,6 +62,8 @@ public class FlowAnalysisUtil {
             flow.addConnect(v.getConnect());
             flow.addSend(v.getSend());
             flow.addReceive(v.getReceive());
+            flow.addConnect(v.getConnect());
+            flow.addTotalConnect(v.getTotalConnect());
         }
         return flow;
     }

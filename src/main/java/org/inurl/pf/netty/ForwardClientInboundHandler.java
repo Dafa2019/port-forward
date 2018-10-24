@@ -39,9 +39,6 @@ public class ForwardClientInboundHandler extends ChannelInboundHandlerAdapter {
         ChannelPool.flushServer(remoteAddress);
     }
 
-    /**
-     * 断开触发
-     */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         String ra = ctx.channel().remoteAddress().toString();
@@ -49,9 +46,6 @@ public class ForwardClientInboundHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
-    /**
-     * 传入触发
-     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         ChannelPool.setClientChannel(remoteAddress, ctx.channel());

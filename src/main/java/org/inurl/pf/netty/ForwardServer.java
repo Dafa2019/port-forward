@@ -10,6 +10,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.inurl.pf.model.Router;
+import org.inurl.pf.support.FlowAnalysisUtil;
 
 public class ForwardServer extends Thread {
 
@@ -52,6 +53,8 @@ public class ForwardServer extends Thread {
         }
         if (f != null)
             f.channel().close();
+
+        FlowAnalysisUtil.clear(router.getNo());
         logger.info("停止端口转发 : " + router);
     }
 }

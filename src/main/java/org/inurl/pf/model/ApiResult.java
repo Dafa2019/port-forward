@@ -15,7 +15,7 @@ public class ApiResult {
 
     public static ApiResult ok(Object data) {
         ApiResult r = new ApiResult();
-        r.success = false;
+        r.success = true;
         r.data = data;
         return r;
     }
@@ -27,4 +27,27 @@ public class ApiResult {
         return r;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
 }
