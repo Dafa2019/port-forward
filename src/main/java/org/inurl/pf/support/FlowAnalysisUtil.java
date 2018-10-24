@@ -17,39 +17,31 @@ public class FlowAnalysisUtil {
         flowMap.remove(no);
     }
 
-    public static void addReviveFlow(String no, long amount) {
-        LockUtil.lock(no);
+    public static synchronized void addReviveFlow(String no, long amount) {
         FlowAnalysis flow = getOrNew(no);
         flow.addReceive(amount);
         flowMap.put(no, flow);
-        LockUtil.release(no);
     }
 
-    public static void addSendFlow(String no, long amount) {
-        LockUtil.lock(no);
+    public static synchronized void addSendFlow(String no, long amount) {
         FlowAnalysis flow = getOrNew(no);
         flow.addSend(amount);
         flowMap.put(no, flow);
-        LockUtil.release(no);
     }
 
-    public static void addConnectFlow(String no, long amount) {
-        LockUtil.lock(no);
+    public static synchronized void addConnectFlow(String no, long amount) {
         FlowAnalysis flow = getOrNew(no);
         flow.addConnect(amount);
         flowMap.put(no, flow);
-        LockUtil.release(no);
     }
 
-    public static void addTotalConnectFlow(String no, long amount) {
-        LockUtil.lock(no);
+    public static synchronized void addTotalConnectFlow(String no, long amount) {
         FlowAnalysis flow = getOrNew(no);
         flow.addTotalConnect(amount);
         flowMap.put(no, flow);
-        LockUtil.release(no);
     }
 
-    private static FlowAnalysis getOrNew(String no) {
+    private static synchronized FlowAnalysis getOrNew(String no) {
         FlowAnalysis flow = flowMap.get(no);
         if (flow == null)
             flow = new FlowAnalysis();
@@ -59,7 +51,6 @@ public class FlowAnalysisUtil {
     public static FlowAnalysis getTotal() {
         FlowAnalysis flow = new FlowAnalysis();
         for (FlowAnalysis v : flowMap.values()) {
-            flow.addConnect(v.getConnect());
             flow.addSend(v.getSend());
             flow.addReceive(v.getReceive());
             flow.addConnect(v.getConnect());
