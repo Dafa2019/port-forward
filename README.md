@@ -3,12 +3,26 @@
 ### 运行环境
 * jdk8
 * maven(仅构建时需要)
-
+### 一键使用
+> 默认AuthCode为123456，端口为56666 可通过`port-forward.sh`脚本中`VM_ARGS`参数修改
+```
+wget https://raw.githubusercontent.com/raylax/port-forward/master/port-forward.sh && chmod +x port-forward.sh && port-forward.sh start
+```
+```
+# 启动
+./port-forward.sh start
+# 停止
+./port-forward.sh stop
+# 重启
+./port-forward.sh restart
+# 状态
+./port-forward.sh status
+```
 ### 构建
 ```
 mvn clean package
 ```
-### 使用
+### 自定义命令使用
 > 默认AuthCode为123456
 ```
 wget https://s.inurl.org/releases/port-forward-1.0.jar
