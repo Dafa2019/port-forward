@@ -9,7 +9,7 @@ mvn clean package
 ```
 ### 使用
 ```
-wget https://github.com/raylax/port-forward/releases/download/1.0/port-forward-1.0.jar
+wget https://s.inurl.org/releases/port-forward-1.0.jar
 java -jar port-forward-1.0.jar
 # web ui http://localhost:56666
 ```
