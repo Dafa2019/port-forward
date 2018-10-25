@@ -7,6 +7,7 @@
     <groupId>org.inurl</groupId>
     <artifactId>port-forward</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
 
     <name>Port forward</name>
     <description>Port forward</description>
