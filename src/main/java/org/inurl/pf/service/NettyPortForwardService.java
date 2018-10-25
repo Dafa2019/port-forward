@@ -4,7 +4,7 @@ import org.inurl.pf.model.Router;
 import org.inurl.pf.netty.ForwardServer;
 import org.inurl.pf.support.FlowAnalysisUtil;
 import org.inurl.pf.support.NetUtil;
-import org.inurl.pf.support.RouteException;
+import org.inurl.pf.support.ServiceException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,7 +19,7 @@ public class NettyPortForwardService implements PortForwardService {
     @Override
     public synchronized void addRouteMapping(Router router) {
         if (!NetUtil.portCheck(router.getPort())) {
-            throw new RouteException("该端口不可用");
+            throw new ServiceException("该端口不可用");
         }
         final int idx = routers.size();
         ForwardServer server = new ForwardServer(router);

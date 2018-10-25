@@ -9,6 +9,7 @@
 mvn clean package
 ```
 ### 使用
+> 默认AuthCode为123456
 ```
 wget https://s.inurl.org/releases/port-forward-1.0.jar
 java -jar port-forward-1.0.jar
@@ -17,6 +18,10 @@ java -jar port-forward-1.0.jar
 后台运行
 ```
 nohup java -jar -Dserver.port=80 port-forward-1.0.jar > /dev/null 2>&1 &
+```
+修改AuthCode
+```
+java -jar -Dauth.code=666666 port-forward-1.0.jar
 ```
 修改运行端口
 ```

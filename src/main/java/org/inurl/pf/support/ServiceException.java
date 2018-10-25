@@ -1,10 +1,10 @@
 package org.inurl.pf.support;
 
-public class RouteException extends RuntimeException {
+public class ServiceException extends RuntimeException {
 
     private String message;
 
-    public RouteException(String message) {
+    public ServiceException(String message) {
         this.message = message;
     }
 

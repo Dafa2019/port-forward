@@ -3,8 +3,8 @@ package org.inurl.pf.controller;
 import org.inurl.pf.model.ApiResult;
 import org.inurl.pf.model.Router;
 import org.inurl.pf.service.PortForwardService;
+import org.inurl.pf.support.Auth;
 import org.inurl.pf.support.FlowAnalysisUtil;
-import org.inurl.pf.support.RouteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +20,14 @@ public class APIController {
         this.portForwardService = portForwardService;
     }
 
+    @Auth
     @PostMapping("/route")
     public ApiResult addRoute(@RequestBody Router router) {
         portForwardService.addRouteMapping(router);
         return ApiResult.ok();
     }
 
+    @Auth
     @DeleteMapping("/route/{id}")
     public ApiResult deleteRoute(@PathVariable String id) {
         portForwardService.removeRouteMapping(id);
@@ -45,11 +47,6 @@ public class APIController {
     @GetMapping("/flow/{id}")
     public ApiResult getFlow(@PathVariable String id) {
         return ApiResult.ok(FlowAnalysisUtil.get(id));
-    }
-
-    @ExceptionHandler(RouteException.class)
-    public ApiResult exceptionHandle(RouteException e) {
-        return ApiResult.fail(e.getMessage());
     }
 
 }
