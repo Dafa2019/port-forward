@@ -27,6 +27,7 @@ public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
         FlowAnalysisUtil.addSendFlow(router.getNo(), len);
         byte[] bytes = new byte[len];
         buf.readBytes(bytes);
+        buf.release();
         String ra = ctx.channel().remoteAddress().toString();
         Lock.Connection.wait(ra);
         Channel cc = ChannelPool.getClientChannel(ctx.channel().remoteAddress().toString());

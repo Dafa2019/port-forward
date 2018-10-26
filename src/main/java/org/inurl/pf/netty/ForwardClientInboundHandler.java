@@ -31,6 +31,7 @@ public class ForwardClientInboundHandler extends ChannelInboundHandlerAdapter {
         byte[] bytes = new byte[len];
         Channel sc = ChannelPool.getServerChannel(remoteAddress);
         buf.readBytes(bytes);
+        buf.release();
         sc.writeAndFlush(bytes);
     }
 
