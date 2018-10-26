@@ -29,6 +29,7 @@ java -jar port-forward-1.0.jar
 # web ui http://localhost:56666
 ```
 > 默认AuthCode为123456
+
 后台运行
 ```
 nohup java -jar -Dserver.port=80 port-forward-1.0.jar > /dev/null 2>&1 &
@@ -45,6 +46,5 @@ java -jar -Dserver.port=8000 port-forward-1.0.jar
 ```
 java -jar -Dlogging.level.root=error port-forward-1.0.jar
 ```
-
 ### 其他
 [web ui source](https://github.com/raylax/port-forward-ui)
