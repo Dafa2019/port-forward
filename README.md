@@ -1,5 +1,8 @@
 # 端口转发程序
 
+[![Build Status](https://travis-ci.org/raylax/port-forward.svg?branch=1.0-refactoring)](https://travis-ci.org/raylax/port-forward)
+[![codecov](https://codecov.io/gh/raylax/port-forward/branch/1.0-refactoring/graph/badge.svg)](https://codecov.io/gh/raylax/port-forward)
+> 此分支为未完成的重构分支，重构中...
 ### 运行环境
 * jdk8
 * maven(仅构建时需要)
