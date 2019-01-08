@@ -5,47 +5,39 @@ import org.inurl.pf.model.FlowAnalysis;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author raylax
+ */
 public class FlowAnalysisUtil {
 
     private static Map<String, FlowAnalysis> flowMap = new ConcurrentHashMap<>();
 
     public static FlowAnalysis get(String no) {
-        return getOrNew(no);
+        return flowMap.get(no);
     }
 
     public static void clear(String no) {
         flowMap.remove(no);
     }
 
-    public static synchronized void addReviveFlow(String no, long amount) {
-        FlowAnalysis flow = getOrNew(no);
-        flow.addReceive(amount);
-        flowMap.put(no, flow);
+    public static void addReviveFlow(String no, long amount) {
+        get(no).addReceive(amount);
     }
 
-    public static synchronized void addSendFlow(String no, long amount) {
-        FlowAnalysis flow = getOrNew(no);
-        flow.addSend(amount);
-        flowMap.put(no, flow);
+    public static void addSendFlow(String no, long amount) {
+        get(no).addSend(amount);
     }
 
-    public static synchronized void addConnectFlow(String no, long amount) {
-        FlowAnalysis flow = getOrNew(no);
-        flow.addConnect(amount);
-        flowMap.put(no, flow);
+    public static void addConnectFlow(String no, long amount) {
+        get(no).addConnect(amount);
     }
 
-    public static synchronized void addTotalConnectFlow(String no, long amount) {
-        FlowAnalysis flow = getOrNew(no);
-        flow.addTotalConnect(amount);
-        flowMap.put(no, flow);
+    public static void addTotalConnectFlow(String no, long amount) {
+        get(no).addTotalConnect(amount);
     }
 
-    private static synchronized FlowAnalysis getOrNew(String no) {
-        FlowAnalysis flow = flowMap.get(no);
-        if (flow == null)
-            flow = new FlowAnalysis();
-        return flow;
+    public static void create(String no) {
+        flowMap.put(no, new FlowAnalysis());
     }
 
     public static FlowAnalysis getTotal() {

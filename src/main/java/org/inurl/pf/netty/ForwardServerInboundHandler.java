@@ -1,65 +1,57 @@
 package org.inurl.pf.netty;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.inurl.pf.model.FlowAnalysis;
 import org.inurl.pf.model.Router;
-import org.inurl.pf.support.FlowAnalysisUtil;
 
+import java.util.Vector;
+
+/**
+ * @author raylax
+ */
 public class ForwardServerInboundHandler extends ChannelInboundHandlerAdapter {
 
     private static Log logger = LogFactory.getLog(ForwardServerInboundHandler.class);
 
-    private Router router;
+    private final Router router;
+    private Client client;
+    private final Vector<Client> clients;
 
-    ForwardServerInboundHandler(Router router) {
+    ForwardServerInboundHandler(Router router, Vector<Client> clients) {
         this.router = router;
+        this.clients = clients;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf buf = (ByteBuf) msg;
-        int len = buf.readableBytes();
-        FlowAnalysisUtil.addSendFlow(router.getNo(), len);
-        byte[] bytes = new byte[len];
-        buf.readBytes(bytes);
-        buf.release();
-        String ra = ctx.channel().remoteAddress().toString();
-        Lock.Connection.wait(ra);
-        Channel cc = ChannelPool.getClientChannel(ctx.channel().remoteAddress().toString());
-        cc.writeAndFlush(bytes);
+        client.write(msg);
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
-        ChannelPool.flushClient(ctx.channel().remoteAddress().toString());
+        client.flush();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        FlowAnalysisUtil.addConnectFlow(router.getNo(), -1);
-        String ra = ctx.channel().remoteAddress().toString();
-        ChannelPool.releaseChannel(ra);
-        ctx.close();
+        client.disconnect();
+        clients.remove(client);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        FlowAnalysisUtil.addConnectFlow(router.getNo(), 1);
-        FlowAnalysisUtil.addTotalConnectFlow(router.getNo(), 1);
-        String ra = ctx.channel().remoteAddress().toString();
-        Lock.Connection.init(ra);
-        ChannelPool.setServerChannel(ra, ctx.channel());
-        new ForwardClient(router, ra).init();
+        logger.info("客户端连入 " + ctx.channel().remoteAddress());
+        client = new ForwardClient(router, ctx.channel());
+        client.connect();
+        clients.add(client);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.debug("异常断开 : " + cause.getMessage());
+        logger.warn("客户端异常", cause);
         ctx.close();
     }
 

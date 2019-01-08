@@ -2,19 +2,25 @@ package org.inurl.pf.service;
 
 import org.inurl.pf.model.Router;
 import org.inurl.pf.netty.ForwardServer;
+import org.inurl.pf.netty.Server;
 import org.inurl.pf.support.FlowAnalysisUtil;
 import org.inurl.pf.support.NetUtil;
 import org.inurl.pf.support.ServiceException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * @author raylax
+ */
 @Service
-public class NettyPortForwardService implements PortForwardService {
+public class NettyPortForwardServiceImpl implements PortForwardService {
 
-    private final List<Router> routers = new ArrayList<>();
-    private final List<ForwardServer> servers = new ArrayList<>();
-    private final Map<String, Integer> idxMap = new HashMap<>();
+    private final List<Router> routers = new CopyOnWriteArrayList<>();
+    private final List<Server> servers = new CopyOnWriteArrayList<>();
+    private final Map<String, Integer> idxMap = new ConcurrentHashMap<>();
 
     @Override
     public synchronized void addRouteMapping(Router router) {
@@ -23,8 +29,6 @@ public class NettyPortForwardService implements PortForwardService {
         }
         final int idx = routers.size();
         ForwardServer server = new ForwardServer(router);
-        routers.add(router);
-        servers.add(server);
         idxMap.put(router.getNo(), idx);
         server.start();
     }
@@ -33,8 +37,8 @@ public class NettyPortForwardService implements PortForwardService {
     public synchronized void removeRouteMapping(String id) {
         int idx = idxMap.get(id);
         routers.remove(idx);
-        ForwardServer server = servers.remove(idx);
-        server.interrupt();
+        Server server = servers.remove(idx);
+        server.stop();
     }
 
     @Override

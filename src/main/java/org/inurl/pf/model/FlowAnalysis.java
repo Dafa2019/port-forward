@@ -2,43 +2,44 @@ package org.inurl.pf.model;
 
 /**
  * 流量统计
+ * @author raylax
  */
 public class FlowAnalysis {
 
     /**
      * 接收流量
      */
-    private long receive = 0;
+    private volatile long receive = 0;
 
     /**
      * 发送流量
      */
-    private long send = 0;
+    private volatile long send = 0;
 
     /**
      * 当前连接数
      */
-    private long connect = 0;
+    private volatile long connect = 0;
 
     /**
      * 总连接数
      */
-    private long totalConnect = 0;
+    private volatile long totalConnect = 0;
 
 
-    public void addReceive(long amount) {
+    public synchronized void addReceive(long amount) {
         receive += amount;
     }
 
-    public void addSend(long amount) {
+    public synchronized void addSend(long amount) {
         send += amount;
     }
 
-    public void addConnect(long amount) {
+    public synchronized void addConnect(long amount) {
         connect += amount;
     }
 
-    public void addTotalConnect(long amount) {
+    public synchronized void addTotalConnect(long amount) {
         totalConnect += amount;
     }
 

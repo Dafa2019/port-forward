@@ -1,5 +1,8 @@
 package org.inurl.pf.model;
 
+/**
+ * @author raylax
+ */
 public class ApiResult {
 
     private boolean success;

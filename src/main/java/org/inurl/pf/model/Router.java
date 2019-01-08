@@ -2,7 +2,8 @@ package org.inurl.pf.model;
 
 
 /**
- * 转发路由
+ * 转发路由表
+ * @author raylax
  */
 public class Router {
 
@@ -27,6 +28,7 @@ public class Router {
     private String targetHost;
 
     private FlowAnalysis flow;
+
 
     public Router() {
 
@@ -87,14 +89,15 @@ public class Router {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Router))
+        if (!(obj instanceof Router)) {
             return false;
+        }
         return toString().equals(obj.toString());
     }
 
     @Override
     public String toString() {
-        return host + ":" + port + "->" + targetHost + ":" + targetPort;
+        return host + ":" + port + " -> " + targetHost + ":" + targetPort;
     }
 
     public String getNo() {
