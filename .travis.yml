@@ -2,7 +2,8 @@ language: java
 sudo: false
 
 jdk:
-- oraclejdk8
+  - oraclejdk8
+  - openjdk8
 
 script:
   - ./mvnw clean cobertura:cobertura package
